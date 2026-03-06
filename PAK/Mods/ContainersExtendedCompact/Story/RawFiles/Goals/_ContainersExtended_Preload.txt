@@ -1,0 +1,67 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+KBSECTION
+// Clear any stuck per-container sort state on every load.
+// Prevents a permanent deadlock if the game was saved while a sort was in
+// progress (after IterateInventory was called but before the 1-second
+// CE_Cleanup timer fired), which leaves DB_CE_ContainerOwner set in the
+// save file with no pending timer to clear it.
+IF
+LevelGameplayStarted(_, _)
+AND
+DB_CE_ContainerOwner((ITEM)_StuckContainer, (CHARACTER)_StuckOwner)
+THEN
+NOT DB_CE_ContainerOwner((ITEM)_StuckContainer, (CHARACTER)_StuckOwner);
+
+IF
+LevelGameplayStarted(_, _)
+AND
+DB_CE_CanonicalItem((ITEM)_StuckContainer, _StuckTpl, (ITEM)_StuckItem, _StuckName)
+THEN
+NOT DB_CE_CanonicalItem((ITEM)_StuckContainer, _StuckTpl, (ITEM)_StuckItem, _StuckName);
+
+IF
+LevelGameplayStarted(_, _)
+AND
+DB_CE_CanonicalAmt((ITEM)_StuckContainer, _StuckTpl, _StuckAmt)
+THEN
+NOT DB_CE_CanonicalAmt((ITEM)_StuckContainer, _StuckTpl, _StuckAmt);
+
+IF
+LevelGameplayStarted(_, _)
+AND
+DB_CE_CanonicalMax((ITEM)_StuckContainer, _StuckTpl, _StuckMax)
+THEN
+NOT DB_CE_CanonicalMax((ITEM)_StuckContainer, _StuckTpl, _StuckMax);
+
+// On load, retroactively apply CE_SORT to items already inside BoH sub-containers
+// that don't have it yet (pre-existing saves, engine-seeded items, etc.).
+// Prevents those items from being re-sorted if the player manually moves them.
+IF
+LevelGameplayStarted(_, _)
+AND
+DB_Players(_Player)
+THEN
+IterateInventory(_Player, "CE_Preload_ApplyContainer", "CE_Preload_ApplyContainerDone");
+
+IF
+EntityEvent(_Container, "CE_Preload_ApplyContainer")
+AND
+IsTagged((ITEM)_Container, (TAG)BAG_OF_HOLDING_8bbc5e54-e381-4526-b082-4d85fc510d15, 1)
+THEN
+IterateInventory(_Container, "CE_Preload_ApplyItem", "CE_Preload_ApplyItemDone");
+
+IF
+EntityEvent(_Item, "CE_Preload_ApplyItem")
+AND
+IsItem((ITEM)_Item, 1)
+AND
+HasAppliedStatus((ITEM)_Item, "CE_SORT", 0)
+THEN
+ApplyStatus((ITEM)_Item, "CE_SORT", -1.0, 1);
+
+EXITSECTION
+
+ENDEXITSECTION

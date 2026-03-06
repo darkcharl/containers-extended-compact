@@ -1,0 +1,36 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+KBSECTION
+IF LevelGameplayStarted(_,_)
+AND
+DB_Players(_Player)
+THEN
+IterateInventory(_Player, "ContainersExtendedForceSort_ApplyContainer", "ContainersExtendedForceSort_ApplyContainerDone");
+
+IF LongRestFinished()
+AND
+DB_Players(_Player)
+THEN
+IterateInventory(_Player, "ContainersExtendedForceSort_ApplyContainer", "ContainersExtendedForceSort_ApplyContainerDone");
+
+IF
+EntityEvent(_Container, "ContainersExtendedForceSort_ApplyContainer")
+AND
+IsTagged((ITEM)_Container, (TAG)BAG_OF_HOLDING_8bbc5e54-e381-4526-b082-4d85fc510d15, 1)
+THEN
+IterateInventory(_Container, "ContainersExtendedForceSort_ApplyItem", "ContainersExtendedForceSort_ApplyItemDone");
+
+IF
+EntityEvent(_Item, "ContainersExtendedForceSort_ApplyItem")
+AND
+IsItem((ITEM)_Item, 1)
+AND
+HasAppliedStatus((ITEM)_Item, "CONTAINERS_EXTENDED_FORCESORT", 1)
+THEN
+RemoveStatus((ITEM)_Item, "CONTAINERS_EXTENDED_FORCESORT");
+
+EXITSECTION
+
+ENDEXITSECTION

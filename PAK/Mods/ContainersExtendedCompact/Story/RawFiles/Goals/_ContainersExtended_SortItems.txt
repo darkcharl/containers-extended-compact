@@ -1,0 +1,413 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+KBSECTION
+// Process item if it's still in inventory after timer elapsed
+// IF
+// ObjectTimerFinished((GUIDSTRING)_Item, "ContainersExtended_ForceSort")
+// AND
+// NOT DB_GlobalFlag((FLAG)ContainersExtended_ForceSort_Disabled_5a5d0e15-8ed5-4556-b8ce-071c07ee825f)
+// AND
+// GetDirectInventoryOwner(_Item, _Inventory)
+// AND
+// IsTagged(_Item, (TAG)BAG_OF_HOLDING_8bbc5e54-e381-4526-b082-4d85fc510d15, 0) // Do not sort containers themselves
+// AND
+// IsTagged(_Inventory, (TAG)BAG_OF_HOLDING_8bbc5e54-e381-4526-b082-4d85fc510d15, 0) // Check if inventory is our container
+// THEN
+// PROC_CE_SortItem(_Item, _Inventory);
+
+// Sort Items
+PROC
+PROC_CE_SortItems((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+NOT DB_GlobalFlag((FLAG)ContainersExtended_ForceSort_Disabled_5a5d0e15-8ed5-4556-b8ce-071c07ee825f)
+AND
+IsContainer((ITEM)_Item, 0) // Do not sort any container
+AND
+IsStoryItem(_Item, 0) // Do not sort story items
+THEN
+PROC_CE_SortItem((GUIDSTRING)_Item, _Inventory);
+
+// Apply WEIGHT_REDUCED before moving if destination is an extraplanar container
+PROC
+PROC_CE_ApplyExtraplanarStatus((GUIDSTRING)_Item, (GUIDSTRING)_Container)
+AND
+IsTagged(_Container, (TAG)BAG_OF_HOLDING_8bbc5e54-e381-4526-b082-4d85fc510d15, 1)
+AND
+HasAppliedStatus(_Item, "WEIGHT_REDUCED", 0)
+THEN
+ApplyStatus(_Item, "WEIGHT_REDUCED", -1.0, 1);
+
+// Get stack size and move full stack to container
+PROC
+PROC_CE_MoveItem((GUIDSTRING)_Item, (GUIDSTRING)_Container)
+AND
+GetStackAmount((ITEM)_Item, _ExactItemAmount, _)
+THEN
+PROC_CE_ApplyExtraplanarStatus(_Item, _Container);
+ToInventory(_Item, _Container, _ExactItemAmount, 0, 0);
+
+// Adventuring Tools
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+IsTagged(_Item, (TAG)ADVENTURING_92921695-ebb1-4bf3-a455-205dea38629f, 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_AdventuringTools_c37f6372-be2c-4a27-9d62-0cfe15e0dae0, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+// Alchemy Extracts
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+IsTagged(_Item, (TAG)ALCH_EXTRACT_85b58b89-c881-43c2-bbbe-7c8a0b3bf981, 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)CONT_GEN_AlchemyPouch_b7543ff4-5010-4c01-9bcd-4da1047aebfc, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+// Alchemy Ingredients
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+IsTagged(_Item, (TAG)ALCH_INGREDIENT_64b824e7-50c5-475a-98c2-52026e372d77, 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)CONT_GEN_AlchemyPouch_b7543ff4-5010-4c01-9bcd-4da1047aebfc, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+// Archery Weapons
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+IsTagged(_Item, (TAG)ARCHERYWEAPON_73d71484-d9eb-4b7f-9f8e-ef06f9f75199, 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_ArcheryWeaponsChest_c92f1609-45d1-4b97-8135-20b4473ddfb3, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+// Armor
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+IsTagged(_Item, (TAG)ARMOR_d14e607b-d199-421a-837b-9e5223b2d67c, 1)
+AND
+NOT IsTagged(_Item, (TAG)CLOAK_6de7409e-eef8-402f-955c-5a8198b6480a, 1)
+AND
+NOT IsTagged(_Item, (TAG)HEADWEAR_d4058e67-954f-46d8-9b0d-4dbc4087a44d, 1)
+AND
+NOT IsTagged(_Item, (TAG)GLOVE_874d2efb-77ad-45ef-9cd3-2a114e9f3610, 1)
+AND
+NOT IsTagged(_Item, (TAG)FOOTWEAR_664dcf78-071c-44de-8208-d38a8989560a, 1)
+AND
+NOT IsTagged(_Item, (TAG)SHIELD_c8a90e5f-86ac-48e3-a4ed-06c2d6f44a65, 1)
+AND
+NOT IsTagged(_Item, (TAG)WARDROBE_74c4425e-edf0-417b-95af-cf3fe2cb7446, 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_ArmorChest_13adf152-2273-4dd8-a5f6-a9c4e00d6f40, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+// Arrows (Quiver)
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+IsTagged(_Item, (TAG)ARROW_fa8afea4-4742-4467-bdef-69851bd15878, 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_Quiver_ec028adf-be8e-468d-81d6-e3a5ea85eae1, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+// Barrels (ExplosivesBarrel)
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+IsTagged(_Item, (TAG)BARREL_70044544-72b7-4340-bf32-37bb9c2a8314, 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_ExplosivesBarrel_224730ad-64e0-4de6-aaec-3668e77dace2, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+// Books
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+IsTagged(_Item, (TAG)BOOK_8a8e253a-c081-45a1-9fa2-91b6901dc568, 1)
+AND
+IsTagged(_Item, (TAG)SCROLL_dd86c045-0370-4ec9-b7c5-b0b160706f09, 0)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_BookBag_2626e4de-979a-4c2a-b59a-7e7f89e8e18e, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+// Cloaks
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+IsTagged(_Item, (TAG)CLOAK_6de7409e-eef8-402f-955c-5a8198b6480a, 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_CloakBox_e3dedb5c-571a-4e98-8ff6-47de32e73dd7, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+// Coatings
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+IsTagged(_Item, (TAG)COATING_354041e2-72d7-422d-ae75-aa0ac22d5ebd, 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_CoatingsCase_bc5558b7-1ff8-482b-aa07-f067b78a944e, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+// Consumable
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+IsTagged(_Item, (TAG)CONSUMABLE_4d79b277-97f0-4227-a780-7a14fb9827fc, 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)CampSupplySack_efcb70b7-868b-4214-968a-e23f6ad586bc, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+// Camp Supplies
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+IsTagged(_Item, (TAG)CAMPSUPPLIES_14e17bf7-a466-404a-b097-29642492a2b2, 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)CampSupplySack_efcb70b7-868b-4214-968a-e23f6ad586bc, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+// Dyes
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+IsTagged(_Item, (TAG)DYE_d8ef5332-ed2f-42cb-817d-bd2164673223, 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_DyeRack_6333d107-fc3d-43d3-a2bb-b29f76d434d8, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+// Footwear
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+IsTagged(_Item, (TAG)FOOTWEAR_664dcf78-071c-44de-8208-d38a8989560a, 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_FootwearBox_5159664a-4998-4ade-ac73-93da44cb2d6f, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+// Gloves
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+IsTagged(_Item, (TAG)GLOVE_874d2efb-77ad-45ef-9cd3-2a114e9f3610, 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_GloveBox_59adcda4-0efa-4697-8aba-48063e6d7481, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+// Gold (CoinSack)
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+IsTagged(_Item, (TAG)GOLD_6c6b7cac-113c-42ee-bc46-05567b067a9f, 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_CoinSack_0e356085-617d-44a5-bedb-256d31647b86, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+// Grenades
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+IsTagged(_Item, (TAG)GRENADE_fe0d86c3-a562-430e-a633-d8bf9bb27284, 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_GrenadeContainer_14415b1f-47cf-4672-b2cf-dd8db20a37e4, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+// Headwear
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+IsTagged(_Item, (TAG)HEADWEAR_d4058e67-954f-46d8-9b0d-4dbc4087a44d, 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_HeadwearBox_c05b14ba-ac1f-4282-8ccc-ccd05af9ecaa, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+// Jewelry
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+IsTagged(_Item, (TAG)JEWELRY_69d067e4-6c41-4812-92d8-aab0eb8ef2ac, 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_JewelryBox_a5c85fc6-c7bf-49a8-b74b-5832d7e39d42, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+// Keys
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+IsTagged(_Item, (TAG)KEY_9851fa99-5538-432a-8e77-c90929a88974, 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)CONT_GEN_Keychain_ee329627-dbee-405f-b9a6-b260de9ad34c, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+// Melee Weapons
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+IsTagged(_Item, (TAG)MELEEWEAPON_c73365d5-38c3-49b4-9542-4f0c1e39c1d8, 1)
+AND
+IsTagged(_Item, (TAG)THROWNWEAPON_a9088b32-1917-46ca-9f08-5b0f46a5936a, 0)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_MeleeWeaponsChest_2e850e24-0c13-49ff-bf51-29948baaf7f4, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+// Potions
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+IsTagged(_Item, (TAG)POTION_56c99a77-8f6a-4584-8e41-2a3b9f6b5261, 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_PotionCase_9624d2e7-ab93-49df-9f34-90dcead9e5d7, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+// Scrolls
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+IsTagged(_Item, (TAG)SCROLL_dd86c045-0370-4ec9-b7c5-b0b160706f09, 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_ScrollCase_e6ae8c31-f079-4aea-8e87-3b35463518cc, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+// Shields
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+IsTagged(_Item, (TAG)SHIELD_c8a90e5f-86ac-48e3-a4ed-06c2d6f44a65, 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_ShieldsChest_c56debec-7e08-4efd-8a75-3841ec448033, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+// Toys
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+IsTagged(_Item, (TAG)TOY_454d69b9-11c3-4d79-95f6-607b88bbef75, 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_TeddyBear_2062cd5f-3725-46b0-8f12-75e7dad9078a, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+// Thrown
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+IsTagged(_Item, (TAG)THROWNWEAPON_a9088b32-1917-46ca-9f08-5b0f46a5936a, 1)
+AND
+NOT IsTagged(_Item, (TAG)GRENADE_fe0d86c3-a562-430e-a633-d8bf9bb27284, 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_ThrownWeaponsChest_3552b5eb-b261-4f9e-bd46-8830d3f898d1, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+// Valuables (CoinSack)
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+IsTagged(_Item, (TAG)VALUABLES_058af61c-25e7-4f7c-95dd-4a3890d25f48, 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_CoinSack_0e356085-617d-44a5-bedb-256d31647b86, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+// Wardrobe
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+IsTagged(_Item, (TAG)WARDROBE_74c4425e-edf0-417b-95af-cf3fe2cb7446, 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_Wardrobe_8c3d8b21-0fb9-44be-ad00-ef0531fa2f1d, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+// Catch-all: items that don't match any known category go to Bag of Holding
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+NOT IsTagged(_Item, (TAG)ADVENTURING_92921695-ebb1-4bf3-a455-205dea38629f, 1)
+AND
+NOT IsTagged(_Item, (TAG)ALCH_EXTRACT_85b58b89-c881-43c2-bbbe-7c8a0b3bf981, 1)
+AND
+NOT IsTagged(_Item, (TAG)ALCH_INGREDIENT_64b824e7-50c5-475a-98c2-52026e372d77, 1)
+AND
+NOT IsTagged(_Item, (TAG)ARCHERYWEAPON_73d71484-d9eb-4b7f-9f8e-ef06f9f75199, 1)
+AND
+NOT IsTagged(_Item, (TAG)ARMOR_d14e607b-d199-421a-837b-9e5223b2d67c, 1)
+AND
+NOT IsTagged(_Item, (TAG)ARROW_fa8afea4-4742-4467-bdef-69851bd15878, 1)
+AND
+NOT IsTagged(_Item, (TAG)BARREL_70044544-72b7-4340-bf32-37bb9c2a8314, 1)
+AND
+NOT IsTagged(_Item, (TAG)BOOK_8a8e253a-c081-45a1-9fa2-91b6901dc568, 1)
+AND
+NOT IsTagged(_Item, (TAG)CLOAK_6de7409e-eef8-402f-955c-5a8198b6480a, 1)
+AND
+NOT IsTagged(_Item, (TAG)CAMPSUPPLIES_14e17bf7-a466-404a-b097-29642492a2b2, 1)
+AND
+NOT IsTagged(_Item, (TAG)COATING_354041e2-72d7-422d-ae75-aa0ac22d5ebd, 1)
+AND
+NOT IsTagged(_Item, (TAG)DYE_d8ef5332-ed2f-42cb-817d-bd2164673223, 1)
+AND
+NOT IsTagged(_Item, (TAG)FOOTWEAR_664dcf78-071c-44de-8208-d38a8989560a, 1)
+AND
+NOT IsTagged(_Item, (TAG)GLOVE_874d2efb-77ad-45ef-9cd3-2a114e9f3610, 1)
+AND
+NOT IsTagged(_Item, (TAG)GOLD_6c6b7cac-113c-42ee-bc46-05567b067a9f, 1)
+AND
+NOT IsTagged(_Item, (TAG)GRENADE_fe0d86c3-a562-430e-a633-d8bf9bb27284, 1)
+AND
+NOT IsTagged(_Item, (TAG)HEADWEAR_d4058e67-954f-46d8-9b0d-4dbc4087a44d, 1)
+AND
+NOT IsTagged(_Item, (TAG)JEWELRY_69d067e4-6c41-4812-92d8-aab0eb8ef2ac, 1)
+AND
+NOT IsTagged(_Item, (TAG)KEY_9851fa99-5538-432a-8e77-c90929a88974, 1)
+AND
+NOT IsTagged(_Item, (TAG)MELEEWEAPON_c73365d5-38c3-49b4-9542-4f0c1e39c1d8, 1)
+AND
+NOT IsTagged(_Item, (TAG)POTION_56c99a77-8f6a-4584-8e41-2a3b9f6b5261, 1)
+AND
+NOT IsTagged(_Item, (TAG)SCROLL_dd86c045-0370-4ec9-b7c5-b0b160706f09, 1)
+AND
+NOT IsTagged(_Item, (TAG)SHIELD_c8a90e5f-86ac-48e3-a4ed-06c2d6f44a65, 1)
+AND
+NOT IsTagged(_Item, (TAG)TOY_454d69b9-11c3-4d79-95f6-607b88bbef75, 1)
+AND
+NOT IsTagged(_Item, (TAG)THROWNWEAPON_a9088b32-1917-46ca-9f08-5b0f46a5936a, 1)
+AND
+NOT IsTagged(_Item, (TAG)VALUABLES_058af61c-25e7-4f7c-95dd-4a3890d25f48, 1)
+AND
+NOT IsTagged(_Item, (TAG)WARDROBE_74c4425e-edf0-417b-95af-cf3fe2cb7446, 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_BagOfHolding_6c08cd7c-bc9e-4c2a-aff5-889c8eb9cc27, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+EXITSECTION
+
+ENDEXITSECTION

@@ -1,0 +1,241 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+// Declare DB arity for the compiler. SE writes DB_CE_HasScriptEngine(1) from Lua
+// when present; this write-retract leaves the DB empty but makes the type known.
+DB_CE_HasScriptEngine(0);
+NOT DB_CE_HasScriptEngine(0);
+
+KBSECTION
+// When a player opens an ExtraplanarContainer, merge duplicate partial stacks.
+//
+// Cap: GetMaxStackAmount is queried directly per item and used as the merge cap.
+//      Confirmed reliable — returns only 20 or 99 in practice.
+//
+// gsMax guard: Rule 1 and Rule 2b only act on items where the Osiris scripted amount
+//      (first GetStackAmount return) <= engine actual (second return). When scripted >
+//      actual it means a prior CEFS pass called SetStackAmount(N) and then actual dropped
+//      below N (items used). Calling SetStackAmount(target > actual) on such an item
+//      inflates gsMax: newScripted = oldScripted + (target - actual) > target. The
+//      guard is free for fresh/unprocessed items because their scripted always equals actual.
+//
+// Cleanup: ObjectTimerLaunch fires 1 second after IterateInventory is called,
+//          clearing all temporary DBs. The IterateInventory done event (CE_StackItemDone)
+//          fires but delivers a NULL entity, so it cannot be used for container-keyed cleanup.
+//
+// Guard: NOT DB_CE_ContainerOwner prevents re-entry while a pass is in progress.
+//        The timer clears it after ~1 second.
+//
+// Container key: UseStarted and ObjectTimerFinished provide the container as a
+//     full name-prefixed GUID (e.g. OBJ_..._<uuid>). GetDirectInventoryOwner
+//     returns only the bare UUID — a different string that does NOT match Osiris
+//     DB lookups against the prefixed form. All rules derive the container key from
+//     DB_CE_ContainerOwner (set by UseStarted, cleared by ObjectTimerFinished).
+//
+// S_ guard: World-placed named objects use the "S_" naming convention (e.g.
+//     S_TUT_Lab_Book_000_...). They may carry per-entity Osiris state that is
+//     lost when the engine merges same-template items into a stack. These items
+//     are already guarded by IsStoryItem in most cases, but the prefix check via
+//     GUIDToString + Substring(1,2) provides defence-in-depth for any that slip
+//     through (e.g. world objects not flagged as story items).
+//
+// Script Engine integration: If BG3 Script Extender is present it sets
+//     DB_CE_HasScriptEngine(1) during its initialisation and takes over the
+//     full stacking pass, keying DB_CE_CanonicalItem by display name so that
+//     items with identical templates but different names are never merged.
+//     Rules 1, 2a, and 2b are guarded by NOT DB_CE_HasScriptEngine((INTEGER)_) so
+//     they are skipped when SE is active.
+//
+// DB_CE_CanonicalItem schema: (ITEM)_ActiveContainer, (GUIDSTRING)_Template,
+//     (ITEM)_Item, (STRING)_Name. Osiris always writes "" for _Name (template-only
+//     keying). SE writes the actual display name (per-name keying).
+
+IF
+UseStarted(_Player, _Container)
+AND
+NOT DB_GlobalFlag((FLAG)ContainersExtended_ForceSort_Disabled_5a5d0e15-8ed5-4556-b8ce-071c07ee825f)
+AND
+DB_Players((CHARACTER)_Player)
+AND
+IsTagged((ITEM)_Container, (TAG)BAG_OF_HOLDING_8bbc5e54-e381-4526-b082-4d85fc510d15, 1)
+AND
+NOT DB_CE_ContainerOwner((ITEM)_Container, _)
+THEN
+DB_CE_ContainerOwner((ITEM)_Container, (CHARACTER)_Player);
+ObjectTimerLaunch(_Container, "CE_Cleanup", 1000);
+IterateInventory(_Container, "CE_StackItem", "CE_StackItemDone");
+
+// ---- Pass: merge partial stacks ----
+
+// Rule 1: Designate the first partial stack of each template as canonical.
+// GetMaxStackAmount is used directly as the cap (confirmed to return only 20 or 99).
+// gsMax guard: see header comment above.
+// S_ guard: see header comment above.
+IF
+EntityEvent(_Item, "CE_StackItem")
+AND
+IsItem((ITEM)_Item, 1)
+AND
+IsStoryItem((ITEM)_Item, 0)
+AND
+NOT DB_GlobalFlag((FLAG)ContainersExtended_ForceSort_Disabled_5a5d0e15-8ed5-4556-b8ce-071c07ee825f)
+AND
+NOT DB_CE_HasScriptEngine((INTEGER)_)
+AND
+GetMaxStackAmount((ITEM)_Item, _RawMax)
+AND
+_RawMax > 1
+AND
+GetTemplate(_Item, _Template)
+AND
+GUIDToString(_Item, _ItemStr)
+AND
+Substring(_ItemStr, 1, 2, _ItemPrefix)
+AND
+_ItemPrefix != "S_"
+AND
+DB_CE_ContainerOwner((ITEM)_ActiveContainer, _)
+AND
+GetStackAmount((ITEM)_Item, _ItemGsMax, _ItemCurrentAmount)
+AND
+_ItemCurrentAmount < _RawMax
+AND
+_ItemGsMax <= _ItemCurrentAmount
+AND
+NOT DB_CE_CanonicalItem((ITEM)_ActiveContainer, _Template, _, "")
+THEN
+DB_CE_CanonicalItem((ITEM)_ActiveContainer, _Template, (ITEM)_Item, "");
+DB_CE_CanonicalAmt((ITEM)_ActiveContainer, _Template, _ItemCurrentAmount);
+DB_CE_CanonicalMax((ITEM)_ActiveContainer, _Template, _RawMax);
+
+// Rule 2a: Merge non-canonical item into canonical when combined fits within cap.
+// Reads canonical amount from DB_CE_CanonicalAmt (not engine value) because
+// SetStackAmount writes are deferred — re-querying the engine mid-pass returns
+// the pre-commit value and would cause incorrect merge arithmetic.
+// S_ guard: see header comment above.
+IF
+EntityEvent(_Item, "CE_StackItem")
+AND
+IsItem((ITEM)_Item, 1)
+AND
+IsStoryItem((ITEM)_Item, 0)
+AND
+NOT DB_GlobalFlag((FLAG)ContainersExtended_ForceSort_Disabled_5a5d0e15-8ed5-4556-b8ce-071c07ee825f)
+AND
+NOT DB_CE_HasScriptEngine((INTEGER)_)
+AND
+GetTemplate(_Item, _Template)
+AND
+GUIDToString(_Item, _ItemStr)
+AND
+Substring(_ItemStr, 1, 2, _ItemPrefix)
+AND
+_ItemPrefix != "S_"
+AND
+DB_CE_ContainerOwner((ITEM)_ActiveContainer, _)
+AND
+DB_CE_CanonicalItem((ITEM)_ActiveContainer, _Template, (ITEM)_Canonical, "")
+AND
+NOT DB_CE_CanonicalItem((ITEM)_ActiveContainer, _Template, (ITEM)_Item, "")
+AND
+DB_CE_CanonicalMax((ITEM)_ActiveContainer, _Template, _CanonMax)
+AND
+DB_CE_CanonicalAmt((ITEM)_ActiveContainer, _Template, _CanonAmount)
+AND
+GetStackAmount((ITEM)_Item, _, _ItemAmount)
+AND
+_ItemAmount < _CanonMax
+AND
+IntegerSum(_CanonAmount, _ItemAmount, _NewAmount)
+AND
+_NewAmount <= _CanonMax
+THEN
+SetStackAmount((ITEM)_Canonical, _NewAmount);
+RequestDelete(_Item);
+NOT DB_CE_CanonicalAmt((ITEM)_ActiveContainer, _Template, _CanonAmount);
+DB_CE_CanonicalAmt((ITEM)_ActiveContainer, _Template, _NewAmount);
+
+// Rule 2b: Overflow — fill canonical to cap, reduce item to remainder.
+// Re-designates the remainder as the new canonical so subsequent items in
+// the same pass can continue merging into it.
+// gsMax guard: only transfer canonical status to items whose scripted <= actual. An item with
+// scripted > actual would inflate on any future SetStackAmount call above actual. Skipping it
+// here is safe because it can still be absorbed as a non-canonical via Rule 2a.
+// S_ guard: see header comment above.
+IF
+EntityEvent(_Item, "CE_StackItem")
+AND
+IsItem((ITEM)_Item, 1)
+AND
+IsStoryItem((ITEM)_Item, 0)
+AND
+NOT DB_GlobalFlag((FLAG)ContainersExtended_ForceSort_Disabled_5a5d0e15-8ed5-4556-b8ce-071c07ee825f)
+AND
+NOT DB_CE_HasScriptEngine((INTEGER)_)
+AND
+GetTemplate(_Item, _Template)
+AND
+GUIDToString(_Item, _ItemStr)
+AND
+Substring(_ItemStr, 1, 2, _ItemPrefix)
+AND
+_ItemPrefix != "S_"
+AND
+DB_CE_ContainerOwner((ITEM)_ActiveContainer, _)
+AND
+DB_CE_CanonicalItem((ITEM)_ActiveContainer, _Template, (ITEM)_Canonical, "")
+AND
+NOT DB_CE_CanonicalItem((ITEM)_ActiveContainer, _Template, (ITEM)_Item, "")
+AND
+DB_CE_CanonicalMax((ITEM)_ActiveContainer, _Template, _CanonMax)
+AND
+DB_CE_CanonicalAmt((ITEM)_ActiveContainer, _Template, _CanonAmount)
+AND
+_CanonAmount < _CanonMax
+AND
+GetStackAmount((ITEM)_Item, _ItemGsMax, _ItemAmount)
+AND
+_ItemAmount < _CanonMax
+AND
+_ItemGsMax <= _ItemAmount
+AND
+IntegerSum(_CanonAmount, _ItemAmount, _NewAmount)
+AND
+_NewAmount > _CanonMax
+AND
+IntegerSubtract(_NewAmount, _CanonMax, _Remainder)
+THEN
+SetStackAmount((ITEM)_Canonical, _CanonMax);
+SetStackAmount((ITEM)_Item, _Remainder);
+NOT DB_CE_CanonicalItem((ITEM)_ActiveContainer, _Template, (ITEM)_Canonical, "");
+DB_CE_CanonicalItem((ITEM)_ActiveContainer, _Template, (ITEM)_Item, "");
+NOT DB_CE_CanonicalAmt((ITEM)_ActiveContainer, _Template, _CanonAmount);
+DB_CE_CanonicalAmt((ITEM)_ActiveContainer, _Template, _Remainder);
+
+// ---- Cleanup (ObjectTimerLaunch fires ObjectTimerFinished after ~1s) ----
+// NOTE: ObjectTimerLaunch fires ObjectTimerFinished (NOT EntityEvent) in BG3.
+// All cleanup rules must use ObjectTimerFinished as the trigger.
+
+IF
+ObjectTimerFinished((ITEM)_Container, "CE_Cleanup")
+AND
+DB_CE_CanonicalItem((ITEM)_Container, _Template, (ITEM)_Canon, _CanonName)
+AND
+DB_CE_CanonicalAmt((ITEM)_Container, _Template, _Amt)
+AND
+DB_CE_CanonicalMax((ITEM)_Container, _Template, _Max)
+THEN
+NOT DB_CE_CanonicalItem((ITEM)_Container, _Template, (ITEM)_Canon, _CanonName);
+NOT DB_CE_CanonicalAmt((ITEM)_Container, _Template, _Amt);
+NOT DB_CE_CanonicalMax((ITEM)_Container, _Template, _Max);
+
+IF
+ObjectTimerFinished((ITEM)_Container, "CE_Cleanup")
+AND
+DB_CE_ContainerOwner((ITEM)_Container, (CHARACTER)_Owner)
+THEN
+NOT DB_CE_ContainerOwner((ITEM)_Container, (CHARACTER)_Owner);
+
+EXITSECTION
+
+ENDEXITSECTION

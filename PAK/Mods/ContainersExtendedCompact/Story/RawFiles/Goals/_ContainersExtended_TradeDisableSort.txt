@@ -1,0 +1,23 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+KBSECTION
+IF		
+RequestTrade(_Player,_Npc,_StartAsTrade,_ItemsTagFilter)
+AND
+DB_Players(_Player)
+THEN
+SetFlag((FLAG)ContainersExtended_ForceSort_Disabled_5a5d0e15-8ed5-4556-b8ce-071c07ee825f, NULL_00000000-0000-0000-0000-000000000000);
+
+IF
+TradeEnds( _Player,_Helper)
+AND
+DB_Players(_Player)
+THEN
+ClearFlag((FLAG)ContainersExtended_ForceSort_Disabled_5a5d0e15-8ed5-4556-b8ce-071c07ee825f, NULL_00000000-0000-0000-0000-000000000000);
+
+
+EXITSECTION
+
+ENDEXITSECTION

@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="8" build="400" lslib_meta="v1,bswap_guids,lsf_keys_adjacency" />
+	<region id="Flags">
+		<node id="Flags">
+			<attribute id="Description" type="LSString" value="Disables forced autosorting during trade dialog" />
+			<attribute id="Name" type="FixedString" value="ContainersExtended_ForceSort_Disabled" />
+			<attribute id="UUID" type="guid" value="5a5d0e15-8ed5-4556-b8ce-071c07ee825f" />
+			<attribute id="Usage" type="uint8" value="5" />
+		</node>
+	</region>
+</save>

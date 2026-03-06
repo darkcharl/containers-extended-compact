@@ -1,0 +1,26 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+KBSECTION
+IF
+AddedTo(_Item, _Inventory, _)
+AND
+DB_Players((CHARACTER)_Inventory)
+AND
+IsEquipped((ITEM)_Item, 0)
+AND
+NOT DB_GlobalFlag((FLAG)ContainersExtended_ForceSort_Disabled_5a5d0e15-8ed5-4556-b8ce-071c07ee825f)
+AND
+HasAppliedStatus(_Item, "CE_SORT", 0)
+AND
+IsContainer(_Item, 0) // don't even attempt to force sort containers
+AND
+IsStoryItem(_Item, 0) // don't even attempt to force sort story items
+THEN
+ApplyStatus(_Item, "CE_SORT", -1.0, 1);
+PROC_CE_SortItems(_Item, _Inventory);
+
+EXITSECTION
+
+ENDEXITSECTION
