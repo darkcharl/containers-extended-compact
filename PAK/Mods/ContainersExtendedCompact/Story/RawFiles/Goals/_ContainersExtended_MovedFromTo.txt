@@ -1,0 +1,26 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+KBSECTION
+IF
+MovedFromTo(_Item, _, _Inventory, 0)
+AND
+DB_Players((CHARACTER)_Inventory)
+AND
+IsEquipped((ITEM)_Item, 0)
+AND
+IsContainer((ITEM)_Item, 0)
+AND
+IsStoryItem((ITEM)_Item, 0)
+AND
+NOT DB_GlobalFlag((FLAG)ContainersExtended_ForceSort_Disabled_5a5d0e15-8ed5-4556-b8ce-071c07ee825f)
+AND
+HasAppliedStatus(_Item, "CE_SORT", 0)
+THEN
+ApplyStatus(_Item, "CE_SORT", -1.0, 1);
+PROC_CE_SortItems(_Item, _Inventory);
+
+EXITSECTION
+
+ENDEXITSECTION

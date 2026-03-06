@@ -1,0 +1,19 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+KBSECTION
+IF
+RemovedFrom(_Item, _Player)
+AND
+DB_Players((CHARACTER)_Player)
+AND
+IsInInventoryOf(_Item, (CHARACTER)_Player, 0)
+AND
+HasAppliedStatus(_Item, "CE_SORT", 1)
+THEN
+RemoveStatus(_Item, "CE_SORT");
+
+EXITSECTION
+
+ENDEXITSECTION

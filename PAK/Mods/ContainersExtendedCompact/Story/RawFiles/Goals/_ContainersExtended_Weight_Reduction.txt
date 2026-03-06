@@ -1,0 +1,56 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+KBSECTION
+IF
+AddedTo(_Container, _Inventory, _)
+AND
+DB_Players((CHARACTER)_Inventory)
+AND
+IsTagged((ITEM)_Container, (TAG)BAG_OF_HOLDING_8bbc5e54-e381-4526-b082-4d85fc510d15, 1)
+THEN
+ApplyStatus((ITEM)_Container, "CE_BAG_OF_HOLDING", -1.0, 1, NULL_00000000-0000-0000-0000-000000000000);
+
+IF
+AddedTo(_Item, _Container, _)
+AND
+IsTagged((ITEM)_Container, (TAG)BAG_OF_HOLDING_8bbc5e54-e381-4526-b082-4d85fc510d15, 1)
+THEN
+ApplyStatus((ITEM)_Item, "WEIGHT_REDUCED", -1.0, 1, NULL_00000000-0000-0000-0000-000000000000);
+
+IF
+RemovedFrom(_Item, _Container)
+AND
+IsTagged((ITEM)_Container, (TAG)BAG_OF_HOLDING_8bbc5e54-e381-4526-b082-4d85fc510d15, 1)
+THEN
+RemoveStatus((ITEM)_Item, "WEIGHT_REDUCED");
+
+IF LevelGameplayStarted(_,_)
+AND
+DB_Players(_Player)
+THEN
+IterateInventory(_Player, "CE_ApplyContainer", "CE_ApplyContainerDone");
+
+IF LongRestFinished()
+AND
+DB_Players(_Player)
+THEN
+IterateInventory(_Player, "CE_ApplyContainer", "CE_ApplyContainerDone");
+
+IF
+EntityEvent(_Container, "CE_ApplyContainer")
+AND
+IsTagged((ITEM)_Container, (TAG)BAG_OF_HOLDING_8bbc5e54-e381-4526-b082-4d85fc510d15, 1)
+THEN
+ApplyStatus((ITEM)_Container, "CE_BAG_OF_HOLDING", -1.0, 1, NULL_00000000-0000-0000-0000-000000000000);
+IterateInventory(_Container, "CE_ApplyItem", "CE_ApplyItemDone");
+
+IF
+EntityEvent(_Item, "CE_ApplyItem")
+THEN
+ApplyStatus((ITEM)_Item, "WEIGHT_REDUCED", -1.0, 1, NULL_00000000-0000-0000-0000-000000000000);
+
+EXITSECTION
+
+ENDEXITSECTION

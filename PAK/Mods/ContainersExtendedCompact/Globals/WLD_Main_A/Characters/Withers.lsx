@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="9" build="0" lslib_meta="v1,bswap_guids,lsf_adjacency" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="AnubisConfigName" type="FixedString" value="GLO_Jergal_Act1" />
+					<attribute id="CanJoinCombat" type="bool" value="False" />
+					<attribute id="CharacterVisualResourceID" type="FixedString" value="14260f7e-1196-52ef-8037-e2b3e36a261a" />
+					<attribute id="DisplayName" type="TranslatedString" handle="hdb8fc8dfgf320g4f5fga958g3f28960fb92e" version="2" />
+					<attribute id="Faction" type="guid" value="bc9d422f-04a9-4338-93e5-1da13fda1407" />
+					<attribute id="Flag" type="int32" value="1" />
+					<attribute id="Icon" type="FixedString" value="14260f7e-1196-52ef-8037-e2b3e36a261a-EQP_Staff_(Icon_Skeleton)" />
+					<attribute id="IsGlobal" type="bool" value="True" />
+					<attribute id="LevelName" type="FixedString" value="WLD_Main_A" />
+					<attribute id="MapKey" type="FixedString" value="0133f2ad-e121-4590-b5f0-a79413919805" />
+					<attribute id="Name" type="LSString" value="S_GLO_JergalAvatar" />
+					<attribute id="Stats" type="FixedString" value="GLO_Jergal" />
+					<attribute id="TemplateName" type="FixedString" value="edb2601b-7f01-44e5-84df-7513a695d4eb" />
+					<attribute id="Type" type="FixedString" value="character" />
+					<attribute id="VocalAlertResourceID" type="FixedString" value="" />
+					<attribute id="VocalAngryResourceID" type="FixedString" value="" />
+					<attribute id="VocalAnticipationResourceID" type="FixedString" value="" />
+					<attribute id="VocalAttackResourceID" type="FixedString" value="a2d4fd03-b312-5b69-d8c2-818906754c9c" />
+					<attribute id="VocalAwakeResourceID" type="FixedString" value="7e41025a-7aaf-2021-43e0-24b7cf19ee78" />
+					<attribute id="VocalBoredResourceID" type="FixedString" value="" />
+					<attribute id="VocalDeathResourceID" type="FixedString" value="11fa79e1-3b44-bc4b-12a4-9631cd3961a5" />
+					<attribute id="VocalDodgeResourceID" type="FixedString" value="a21fdd7d-48a6-67d5-9b16-143d4a1e5e4a" />
+					<attribute id="VocalEffortsResourceID" type="FixedString" value="cca7624e-c0c2-8e5c-bd55-ea2510c1df25" />
+					<attribute id="VocalExhaustedResourceID" type="FixedString" value="" />
+					<attribute id="VocalFallResourceID" type="FixedString" value="0be58d6b-38ef-fa70-e66b-28d1a1e91eae" />
+					<attribute id="VocalIdle1ResourceID" type="FixedString" value="" />
+					<attribute id="VocalIdle2ResourceID" type="FixedString" value="" />
+					<attribute id="VocalIdle3ResourceID" type="FixedString" value="" />
+					<attribute id="VocalLaughterManiacalResourceID" type="FixedString" value="171f127f-6dba-4a9d-8f8c-caead443fb0d" />
+					<attribute id="VocalLaughterResourceID" type="FixedString" value="2f7f6303-6225-55d9-efb9-30a926ff7f0e" />
+					<attribute id="VocalPainResourceID" type="FixedString" value="abfcc538-8fc2-6ed0-3120-1b88bbbf6ae3" />
+					<attribute id="VocalRecoverResourceID" type="FixedString" value="3b41ead1-ce35-07c1-d474-52f1cee21871" />
+					<attribute id="VocalRelaxedResourceID" type="FixedString" value="" />
+					<attribute id="VocalShoutResourceID" type="FixedString" value="822d9eff-a241-1c98-2f7f-b1ff8f0f346b" />
+					<attribute id="VocalSnoreResourceID" type="FixedString" value="a284fe52-e12f-0ca1-af1a-0801bf9f33cc" />
+					<attribute id="VocalVictoryResourceID" type="FixedString" value="de1a9918-1b4d-b27e-0d60-b4f89201ce20" />
+					<attribute id="VocalWeakResourceID" type="FixedString" value="7f3f5902-c12b-59e3-12b1-4f1cf3c3e65f" />
+					<attribute id="_OriginalFileVersion_" type="int64" value="144115207403209035" />
+					<children>
+                        <node id="TradeTreasures">
+							<children>
+								<node id="TreasureItem">
+									<attribute id="Object" type="FixedString" value="ContainersExtended_Full" />
+								</node>
+							</children>
+						</node>
+						<node id="LayerList">
+							<children>
+								<node id="Layers">
+									<children>
+										<node id="Object">
+											<attribute id="MapKey" type="FixedString" value="WLD_Main_A" />
+											<children>
+												<node id="Layer">
+													<attribute id="Object" type="guid" value="0d1b3e0e-930a-23a0-2ad9-f0f3deba210b" />
+												</node>
+												<node id="Layer">
+													<attribute id="Object" type="guid" value="784e0a2b-908e-edcc-02dd-e6aa5c34dc6c" />
+												</node>
+											</children>
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="LocomotionParams" />
+						<node id="Transform">
+							<attribute id="Position" type="fvec3" value="-308.46088 24.103626 116.367096" />
+							<attribute id="RotationQuat" type="fvec4" value="0 0 0 1" />
+							<attribute id="Scale" type="float" value="1" />
+						</node>
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>
