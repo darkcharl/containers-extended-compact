@@ -33,11 +33,6 @@ type "Weapon"
 using "WPN_Greatsword"
 data "DefaultBoosts" "Tag(MELEEWEAPON)"
 
-new entry "MAG_Fire_AlwaysDippedInFire_Greatsword"
-type "Weapon"
-using "MAG_Fire_AlwaysDippedInFire_Greatsword"
-data "DefaultBoosts" "Tag(MELEEWEAPON)"
-
 new entry "WPN_Halberd"
 type "Weapon"
 using "WPN_Halberd"

@@ -3,19 +3,6 @@ SubGoalCombiner SGC_AND
 INITSECTION
 
 KBSECTION
-// Process item if it's still in inventory after timer elapsed
-// IF
-// ObjectTimerFinished((GUIDSTRING)_Item, "ContainersExtended_ForceSort")
-// AND
-// NOT DB_GlobalFlag((FLAG)ContainersExtended_ForceSort_Disabled_5a5d0e15-8ed5-4556-b8ce-071c07ee825f)
-// AND
-// GetDirectInventoryOwner(_Item, _Inventory)
-// AND
-// IsTagged(_Item, (TAG)BAG_OF_HOLDING_8bbc5e54-e381-4526-b082-4d85fc510d15, 0) // Do not sort containers themselves
-// AND
-// IsTagged(_Inventory, (TAG)BAG_OF_HOLDING_8bbc5e54-e381-4526-b082-4d85fc510d15, 0) // Check if inventory is our container
-// THEN
-// PROC_CE_SortItem(_Item, _Inventory);
 
 // Sort Items
 PROC
