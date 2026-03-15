@@ -36,4 +36,5 @@ CE_DIAGNOSTICS = true
 Ext.Require("Stacking.lua")
 Ext.Require("Diagnostics.lua")
 
+
 log("ContainersExtendedCompact loaded.")

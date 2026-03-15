@@ -65,11 +65,67 @@ GetItemByTemplateInInventory((ITEMROOT)CONT_GEN_AlchemyPouch_b7543ff4-5010-4c01-
 THEN
 PROC_CE_MoveItem(_Item, _Container);
 
-// Archery Weapons
+// Archery Weapons (tagged)
 PROC
 PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
 AND
 IsTagged(_Item, (TAG)ARCHERYWEAPON_73d71484-d9eb-4b7f-9f8e-ef06f9f75199, 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_ArcheryWeaponsChest_c92f1609-45d1-4b97-8135-20b4473ddfb3, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+// Archery Weapons (by proficiency group - catches unique ranged weapons without ARCHERYWEAPON tag)
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+NOT IsTagged(_Item, (TAG)ARCHERYWEAPON_73d71484-d9eb-4b7f-9f8e-ef06f9f75199, 1)
+AND
+IsEquipmentWithProficiency((ITEM)_Item, "HandCrossbows", 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_ArcheryWeaponsChest_c92f1609-45d1-4b97-8135-20b4473ddfb3, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+NOT IsTagged(_Item, (TAG)ARCHERYWEAPON_73d71484-d9eb-4b7f-9f8e-ef06f9f75199, 1)
+AND
+IsEquipmentWithProficiency((ITEM)_Item, "HeavyCrossbows", 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_ArcheryWeaponsChest_c92f1609-45d1-4b97-8135-20b4473ddfb3, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+NOT IsTagged(_Item, (TAG)ARCHERYWEAPON_73d71484-d9eb-4b7f-9f8e-ef06f9f75199, 1)
+AND
+IsEquipmentWithProficiency((ITEM)_Item, "LightCrossbows", 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_ArcheryWeaponsChest_c92f1609-45d1-4b97-8135-20b4473ddfb3, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+NOT IsTagged(_Item, (TAG)ARCHERYWEAPON_73d71484-d9eb-4b7f-9f8e-ef06f9f75199, 1)
+AND
+IsEquipmentWithProficiency((ITEM)_Item, "Longbows", 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_ArcheryWeaponsChest_c92f1609-45d1-4b97-8135-20b4473ddfb3, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+NOT IsTagged(_Item, (TAG)ARCHERYWEAPON_73d71484-d9eb-4b7f-9f8e-ef06f9f75199, 1)
+AND
+IsEquipmentWithProficiency((ITEM)_Item, "Shortbows", 1)
 AND
 GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_ArcheryWeaponsChest_c92f1609-45d1-4b97-8135-20b4473ddfb3, _Inventory, _Container)
 THEN
@@ -249,13 +305,234 @@ GetItemByTemplateInInventory((ITEMROOT)CONT_GEN_Keychain_ee329627-dbee-405f-b9a6
 THEN
 PROC_CE_MoveItem(_Item, _Container);
 
-// Melee Weapons
+// Melee Weapons (tagged)
 PROC
 PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
 AND
 IsTagged(_Item, (TAG)MELEEWEAPON_c73365d5-38c3-49b4-9542-4f0c1e39c1d8, 1)
 AND
 IsTagged(_Item, (TAG)THROWNWEAPON_a9088b32-1917-46ca-9f08-5b0f46a5936a, 0)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_MeleeWeaponsChest_2e850e24-0c13-49ff-bf51-29948baaf7f4, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+// Melee Weapons (by proficiency group - catches unique weapons without MELEEWEAPON tag)
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+NOT IsTagged(_Item, (TAG)MELEEWEAPON_c73365d5-38c3-49b4-9542-4f0c1e39c1d8, 1)
+AND
+IsEquipmentWithProficiency((ITEM)_Item, "Battleaxes", 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_MeleeWeaponsChest_2e850e24-0c13-49ff-bf51-29948baaf7f4, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+NOT IsTagged(_Item, (TAG)MELEEWEAPON_c73365d5-38c3-49b4-9542-4f0c1e39c1d8, 1)
+AND
+IsEquipmentWithProficiency((ITEM)_Item, "Clubs", 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_MeleeWeaponsChest_2e850e24-0c13-49ff-bf51-29948baaf7f4, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+NOT IsTagged(_Item, (TAG)MELEEWEAPON_c73365d5-38c3-49b4-9542-4f0c1e39c1d8, 1)
+AND
+IsEquipmentWithProficiency((ITEM)_Item, "Flails", 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_MeleeWeaponsChest_2e850e24-0c13-49ff-bf51-29948baaf7f4, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+NOT IsTagged(_Item, (TAG)MELEEWEAPON_c73365d5-38c3-49b4-9542-4f0c1e39c1d8, 1)
+AND
+IsEquipmentWithProficiency((ITEM)_Item, "Glaives", 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_MeleeWeaponsChest_2e850e24-0c13-49ff-bf51-29948baaf7f4, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+NOT IsTagged(_Item, (TAG)MELEEWEAPON_c73365d5-38c3-49b4-9542-4f0c1e39c1d8, 1)
+AND
+IsEquipmentWithProficiency((ITEM)_Item, "Greataxes", 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_MeleeWeaponsChest_2e850e24-0c13-49ff-bf51-29948baaf7f4, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+NOT IsTagged(_Item, (TAG)MELEEWEAPON_c73365d5-38c3-49b4-9542-4f0c1e39c1d8, 1)
+AND
+IsEquipmentWithProficiency((ITEM)_Item, "Greatclubs", 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_MeleeWeaponsChest_2e850e24-0c13-49ff-bf51-29948baaf7f4, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+NOT IsTagged(_Item, (TAG)MELEEWEAPON_c73365d5-38c3-49b4-9542-4f0c1e39c1d8, 1)
+AND
+IsEquipmentWithProficiency((ITEM)_Item, "Greatswords", 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_MeleeWeaponsChest_2e850e24-0c13-49ff-bf51-29948baaf7f4, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+NOT IsTagged(_Item, (TAG)MELEEWEAPON_c73365d5-38c3-49b4-9542-4f0c1e39c1d8, 1)
+AND
+IsEquipmentWithProficiency((ITEM)_Item, "Halberds", 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_MeleeWeaponsChest_2e850e24-0c13-49ff-bf51-29948baaf7f4, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+NOT IsTagged(_Item, (TAG)MELEEWEAPON_c73365d5-38c3-49b4-9542-4f0c1e39c1d8, 1)
+AND
+IsEquipmentWithProficiency((ITEM)_Item, "Longswords", 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_MeleeWeaponsChest_2e850e24-0c13-49ff-bf51-29948baaf7f4, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+NOT IsTagged(_Item, (TAG)MELEEWEAPON_c73365d5-38c3-49b4-9542-4f0c1e39c1d8, 1)
+AND
+IsEquipmentWithProficiency((ITEM)_Item, "Maces", 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_MeleeWeaponsChest_2e850e24-0c13-49ff-bf51-29948baaf7f4, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+NOT IsTagged(_Item, (TAG)MELEEWEAPON_c73365d5-38c3-49b4-9542-4f0c1e39c1d8, 1)
+AND
+IsEquipmentWithProficiency((ITEM)_Item, "Mauls", 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_MeleeWeaponsChest_2e850e24-0c13-49ff-bf51-29948baaf7f4, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+NOT IsTagged(_Item, (TAG)MELEEWEAPON_c73365d5-38c3-49b4-9542-4f0c1e39c1d8, 1)
+AND
+IsEquipmentWithProficiency((ITEM)_Item, "Morningstars", 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_MeleeWeaponsChest_2e850e24-0c13-49ff-bf51-29948baaf7f4, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+NOT IsTagged(_Item, (TAG)MELEEWEAPON_c73365d5-38c3-49b4-9542-4f0c1e39c1d8, 1)
+AND
+IsEquipmentWithProficiency((ITEM)_Item, "Pikes", 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_MeleeWeaponsChest_2e850e24-0c13-49ff-bf51-29948baaf7f4, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+NOT IsTagged(_Item, (TAG)MELEEWEAPON_c73365d5-38c3-49b4-9542-4f0c1e39c1d8, 1)
+AND
+IsEquipmentWithProficiency((ITEM)_Item, "Quarterstaffs", 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_MeleeWeaponsChest_2e850e24-0c13-49ff-bf51-29948baaf7f4, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+NOT IsTagged(_Item, (TAG)MELEEWEAPON_c73365d5-38c3-49b4-9542-4f0c1e39c1d8, 1)
+AND
+IsEquipmentWithProficiency((ITEM)_Item, "Rapiers", 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_MeleeWeaponsChest_2e850e24-0c13-49ff-bf51-29948baaf7f4, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+NOT IsTagged(_Item, (TAG)MELEEWEAPON_c73365d5-38c3-49b4-9542-4f0c1e39c1d8, 1)
+AND
+IsEquipmentWithProficiency((ITEM)_Item, "Scimitars", 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_MeleeWeaponsChest_2e850e24-0c13-49ff-bf51-29948baaf7f4, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+NOT IsTagged(_Item, (TAG)MELEEWEAPON_c73365d5-38c3-49b4-9542-4f0c1e39c1d8, 1)
+AND
+IsEquipmentWithProficiency((ITEM)_Item, "Shortswords", 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_MeleeWeaponsChest_2e850e24-0c13-49ff-bf51-29948baaf7f4, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+NOT IsTagged(_Item, (TAG)MELEEWEAPON_c73365d5-38c3-49b4-9542-4f0c1e39c1d8, 1)
+AND
+IsEquipmentWithProficiency((ITEM)_Item, "Sickles", 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_MeleeWeaponsChest_2e850e24-0c13-49ff-bf51-29948baaf7f4, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+NOT IsTagged(_Item, (TAG)MELEEWEAPON_c73365d5-38c3-49b4-9542-4f0c1e39c1d8, 1)
+AND
+IsEquipmentWithProficiency((ITEM)_Item, "Warhammers", 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_MeleeWeaponsChest_2e850e24-0c13-49ff-bf51-29948baaf7f4, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+NOT IsTagged(_Item, (TAG)MELEEWEAPON_c73365d5-38c3-49b4-9542-4f0c1e39c1d8, 1)
+AND
+IsEquipmentWithProficiency((ITEM)_Item, "Warpicks", 1)
 AND
 GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_MeleeWeaponsChest_2e850e24-0c13-49ff-bf51-29948baaf7f4, _Inventory, _Container)
 THEN
@@ -301,13 +578,92 @@ GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_TeddyBear_2062cd5f
 THEN
 PROC_CE_MoveItem(_Item, _Container);
 
-// Thrown
+// Thrown Weapons (tagged)
 PROC
 PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
 AND
 IsTagged(_Item, (TAG)THROWNWEAPON_a9088b32-1917-46ca-9f08-5b0f46a5936a, 1)
 AND
 NOT IsTagged(_Item, (TAG)GRENADE_fe0d86c3-a562-430e-a633-d8bf9bb27284, 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_ThrownWeaponsChest_3552b5eb-b261-4f9e-bd46-8830d3f898d1, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+// Thrown Weapons (by proficiency group - catches unique thrown weapons without THROWNWEAPON tag)
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+NOT IsTagged(_Item, (TAG)THROWNWEAPON_a9088b32-1917-46ca-9f08-5b0f46a5936a, 1)
+AND
+NOT IsTagged(_Item, (TAG)GRENADE_fe0d86c3-a562-430e-a633-d8bf9bb27284, 1)
+AND
+IsEquipmentWithProficiency((ITEM)_Item, "Daggers", 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_ThrownWeaponsChest_3552b5eb-b261-4f9e-bd46-8830d3f898d1, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+NOT IsTagged(_Item, (TAG)THROWNWEAPON_a9088b32-1917-46ca-9f08-5b0f46a5936a, 1)
+AND
+NOT IsTagged(_Item, (TAG)GRENADE_fe0d86c3-a562-430e-a633-d8bf9bb27284, 1)
+AND
+IsEquipmentWithProficiency((ITEM)_Item, "Handaxes", 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_ThrownWeaponsChest_3552b5eb-b261-4f9e-bd46-8830d3f898d1, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+NOT IsTagged(_Item, (TAG)THROWNWEAPON_a9088b32-1917-46ca-9f08-5b0f46a5936a, 1)
+AND
+NOT IsTagged(_Item, (TAG)GRENADE_fe0d86c3-a562-430e-a633-d8bf9bb27284, 1)
+AND
+IsEquipmentWithProficiency((ITEM)_Item, "Javelins", 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_ThrownWeaponsChest_3552b5eb-b261-4f9e-bd46-8830d3f898d1, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+NOT IsTagged(_Item, (TAG)THROWNWEAPON_a9088b32-1917-46ca-9f08-5b0f46a5936a, 1)
+AND
+NOT IsTagged(_Item, (TAG)GRENADE_fe0d86c3-a562-430e-a633-d8bf9bb27284, 1)
+AND
+IsEquipmentWithProficiency((ITEM)_Item, "LightHammers", 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_ThrownWeaponsChest_3552b5eb-b261-4f9e-bd46-8830d3f898d1, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+NOT IsTagged(_Item, (TAG)THROWNWEAPON_a9088b32-1917-46ca-9f08-5b0f46a5936a, 1)
+AND
+NOT IsTagged(_Item, (TAG)GRENADE_fe0d86c3-a562-430e-a633-d8bf9bb27284, 1)
+AND
+IsEquipmentWithProficiency((ITEM)_Item, "Spears", 1)
+AND
+GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_ThrownWeaponsChest_3552b5eb-b261-4f9e-bd46-8830d3f898d1, _Inventory, _Container)
+THEN
+PROC_CE_MoveItem(_Item, _Container);
+
+PROC
+PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+NOT IsTagged(_Item, (TAG)THROWNWEAPON_a9088b32-1917-46ca-9f08-5b0f46a5936a, 1)
+AND
+NOT IsTagged(_Item, (TAG)GRENADE_fe0d86c3-a562-430e-a633-d8bf9bb27284, 1)
+AND
+IsEquipmentWithProficiency((ITEM)_Item, "Tridents", 1)
 AND
 GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_ThrownWeaponsChest_3552b5eb-b261-4f9e-bd46-8830d3f898d1, _Inventory, _Container)
 THEN
@@ -334,8 +690,14 @@ THEN
 PROC_CE_MoveItem(_Item, _Container);
 
 // Catch-all: items that don't match any known category go to Bag of Holding
+// Exclude weapons matched by proficiency-based rules above (MartialWeapons/SimpleWeapons
+// are the high-level groups present on every weapon — non-weapons return 0 for both).
 PROC
 PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
+AND
+IsEquipmentWithProficiency((ITEM)_Item, "MartialWeapons", 0)
+AND
+IsEquipmentWithProficiency((ITEM)_Item, "SimpleWeapons", 0)
 AND
 NOT IsTagged(_Item, (TAG)ADVENTURING_92921695-ebb1-4bf3-a455-205dea38629f, 1)
 AND

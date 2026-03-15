@@ -99,6 +99,16 @@ local function sortTagsPresent(item)
     return #found > 0 and table.concat(found, ",") or "none <<CATCH-ALL>>"
 end
 
+-- All proficiency groups across MeleeWeaponsChest, ThrownWeaponsChest, ArcheryWeaponsChest filters.
+local PROF_GROUPS = {
+    "Battleaxes", "Clubs", "Flails", "Glaives", "Greataxes", "Greatclubs",
+    "Greatswords", "Halberds", "Longswords", "Maces", "Mauls", "Morningstars",
+    "Pikes", "Quarterstaffs", "Rapiers", "Scimitars", "Shortswords", "Sickles",
+    "Warhammers", "Warpicks",
+    "Daggers", "Handaxes", "Javelins", "LightHammers", "Spears", "Tridents",
+    "HandCrossbows", "HeavyCrossbows", "LightCrossbows", "Longbows", "Shortbows",
+}
+
 -- LISTENER 0: Item picked up with no known sorting tags — candidate for patching.
 -- Fires regardless of FORCESORT status, catching items the sorting rule never evaluates.
 Ext.Osiris.RegisterListener("AddedTo", 3, "after", function(item, inventory, _)
@@ -108,6 +118,31 @@ Ext.Osiris.RegisterListener("AddedTo", 3, "after", function(item, inventory, _)
     local tpl = Osi.GetTemplate(item) or "?"
     log(string.format("Pickup_NoTag | entity=%-60s | tpl=%s | tags=none <<CATCH-ALL>> <<NEEDS PATCH?>>",
         item, tpl))
+
+    local matched = {}
+    for _, pg in ipairs(PROF_GROUPS) do
+        if Osi.IsEquipmentWithProficiency(item, pg) == 1 then
+            matched[#matched + 1] = pg
+        end
+    end
+    log(string.format("  ProfCheck  | entity=%-60s | tpl=%s | IsEquipmentWithProficiency=%s",
+        item, tpl, #matched > 0 and table.concat(matched, ",") or "none"))
+end)
+
+-- Templates for the three proficiency-matched weapon chests.
+local WEAPON_CHEST_TPLS = {
+    ["OBJ_ContainersExtended_MeleeWeaponsChest_2e850e24-0c13-49ff-bf51-29948baaf7f4"]   = "MeleeChest",
+    ["OBJ_ContainersExtended_ArcheryWeaponsChest_c92f1609-45d1-4b97-8135-20b4473ddfb3"] = "ArcheryChest",
+    ["OBJ_ContainersExtended_ThrownWeaponsChest_3552b5eb-b261-4f9e-bd46-8830d3f898d1"]  = "ThrownChest",
+}
+
+-- LISTENER 1b: Item lands in a weapon chest — tells us if the proficiency PROC fired.
+Ext.Osiris.RegisterListener("AddedTo", 3, "after", function(item, inventory, _)
+    local chestName = WEAPON_CHEST_TPLS[Osi.GetTemplate(inventory)]
+    if not chestName then return end
+    local tpl = Osi.GetTemplate(item) or "?"
+    log(string.format("AddedTo_WeaponChest | entity=%-60s | tpl=%s | chest=%s",
+        item, tpl, chestName))
 end)
 
 -- LISTENER 1: Item lands in the BoH (fired by PROC_CE_MoveItem → ToInventory)
