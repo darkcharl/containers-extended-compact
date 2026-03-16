@@ -1,0 +1,4 @@
+new entry "_Instruments"
+type "Armor"
+using "_Instruments"
+data "DefaultBoosts" "Tag(INSTRUMENT)"

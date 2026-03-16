@@ -723,6 +723,8 @@ NOT IsTagged(_Item, (TAG)COATING_354041e2-72d7-422d-ae75-aa0ac22d5ebd, 1)
 AND
 NOT IsTagged(_Item, (TAG)DYE_d8ef5332-ed2f-42cb-817d-bd2164673223, 1)
 AND
+NOT IsTagged(_Item, (TAG)INSTRUMENT_bd41f244-ffa4-4537-a618-a3dba15a25fc, 1)
+AND
 NOT IsTagged(_Item, (TAG)FOOTWEAR_664dcf78-071c-44de-8208-d38a8989560a, 1)
 AND
 NOT IsTagged(_Item, (TAG)GLOVE_874d2efb-77ad-45ef-9cd3-2a114e9f3610, 1)
