@@ -3,6 +3,8 @@ CanMerge 1
 new subtable "1,1"
 object category "I_OBJ_ContainersExtended_AdventuringTools",1,0,0,0,0,0,0,0
 new subtable "1,1"
+object category "I_OBJ_Bag_AlchemyPouch",1,0,0,0,0,0,0,0
+new subtable "1,1"
 object category "I_OBJ_ContainersExtended_ArcheryWeaponsChest",1,0,0,0,0,0,0,0
 new subtable "1,1"
 object category "I_OBJ_ContainersExtended_ArmorChest",1,0,0,0,0,0,0,0
@@ -10,6 +12,8 @@ new subtable "1,1"
 object category "I_OBJ_ContainersExtended_BagOfHolding",1,0,0,0,0,0,0,0
 new subtable "1,1"
 object category "I_OBJ_ContainersExtended_BookBag",1,0,0,0,0,0,0,0
+new subtable "1,1"
+object category "I_OBJ_Backpack_CampSupplies",1,0,0,0,0,0,0,0
 new subtable "1,1"
 object category "I_OBJ_ContainersExtended_CloakBox",1,0,0,0,0,0,0,0
 new subtable "1,1"
@@ -32,6 +36,8 @@ new subtable "1,1"
 object category "I_OBJ_ContainersExtended_InstrumentsCase",1,0,0,0,0,0,0,0
 new subtable "1,1"
 object category "I_OBJ_ContainersExtended_JewelryBox",1,0,0,0,0,0,0,0
+new subtable "1,1"
+object category "I_OBJ_Keychain",1,0,0,0,0,0,0,0
 new subtable "1,1"
 object category "I_OBJ_ContainersExtended_MeleeWeaponsChest",1,0,0,0,0,0,0,0
 new subtable "1,1"
