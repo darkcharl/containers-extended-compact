@@ -205,16 +205,6 @@ GetItemByTemplateInInventory((ITEMROOT)OBJ_ContainersExtended_CoatingsCase_bc555
 THEN
 PROC_CE_MoveItem(_Item, _Container);
 
-// Consumable
-PROC
-PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
-AND
-IsTagged(_Item, (TAG)CONSUMABLE_4d79b277-97f0-4227-a780-7a14fb9827fc, 1)
-AND
-GetItemByTemplateInInventory((ITEMROOT)CampSupplySack_efcb70b7-868b-4214-968a-e23f6ad586bc, _Inventory, _Container)
-THEN
-PROC_CE_MoveItem(_Item, _Container);
-
 // Camp Supplies
 PROC
 PROC_CE_SortItem((GUIDSTRING)_Item, (GUIDSTRING)_Inventory)
