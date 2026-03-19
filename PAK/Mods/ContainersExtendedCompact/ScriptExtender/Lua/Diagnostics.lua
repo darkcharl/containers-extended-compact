@@ -4,6 +4,8 @@
 --   Fires on every AddedTo for non-story items with no known sorting category tag.
 --   These items hit the BoH catch-all regardless of FORCESORT status and are
 --   flagged as <<NEEDS PATCH?>> to identify missing tag entries.
+--   Also logs all raw tag UUIDs on the item (RawTags line) so you can see what
+--   tags are present and determine which one(s) should be added to SORT_TAGS.
 --
 -- Listener 1 — AddedTo:
 --   Fires whenever an item lands in the BoH during a sort pass.
@@ -127,6 +129,18 @@ Ext.Osiris.RegisterListener("AddedTo", 3, "after", function(item, inventory, _)
     end
     log(string.format("  ProfCheck  | entity=%-60s | tpl=%s | IsEquipmentWithProficiency=%s",
         item, tpl, #matched > 0 and table.concat(matched, ",") or "none"))
+
+    -- Dump every raw tag UUID on the item so missing entries can be identified.
+    local entity = Ext.Entity.Get(item)
+    if entity and entity.Tag and entity.Tag.Tags then
+        local rawTags = {}
+        for _, tag in pairs(entity.Tag.Tags) do
+            rawTags[#rawTags + 1] = tostring(tag)
+        end
+        table.sort(rawTags)
+        log(string.format("  RawTags    | entity=%-60s | tpl=%s | %s",
+            item, tpl, #rawTags > 0 and table.concat(rawTags, ", ") or "none"))
+    end
 end)
 
 -- Templates for the three proficiency-matched weapon chests.
