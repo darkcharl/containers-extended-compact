@@ -111,12 +111,47 @@ local PROF_GROUPS = {
     "HandCrossbows", "HeavyCrossbows", "LightCrossbows", "Longbows", "Shortbows",
 }
 
--- LISTENER 0: Item picked up with no known sorting tags — candidate for patching.
--- Fires regardless of FORCESORT status, catching items the sorting rule never evaluates.
+-- LISTENER 0: Item picked up — logs any item that has no known sorting tag OR has a
+-- known tag but no matching container in inventory (so it silently went unsorted).
+-- Fires regardless of FORCESORT status.
 Ext.Osiris.RegisterListener("AddedTo", 3, "after", function(item, inventory, _)
     if Osi.IsStoryItem(item) == 1 then return end
-    if sortTagsPresent(item) ~= "none <<CATCH-ALL>>" then return end
+    if Osi.IsContainer(item) == 1 then return end
 
+    local tags = sortTagsPresent(item)
+    local isCatchAll = (tags == "none <<CATCH-ALL>>")
+
+    -- For items with known tags: check whether they ended up unsorted (still in the
+    -- player inventory rather than in one of the CE containers).
+    -- We can't easily tell here which container was expected, so log all pickups that
+    -- have known tags but are landing directly in a player inventory (not a CE container).
+    if not isCatchAll then
+        -- Only flag if the destination is a player character inventory (not a sub-container).
+        if Osi.DB_Players:Get(nil) then
+            for _, row in pairs(Osi.DB_Players:Get(nil)) do
+                if row[1] == inventory then
+                    local tpl = Osi.GetTemplate(item) or "?"
+                    log(string.format("Pickup_KnownTag_Unsorted | entity=%-60s | tpl=%s | tags=%s <<CHECK CONTAINER PRESENT?>>",
+                        item, tpl, tags))
+                    -- Dump raw tags for diagnosis.
+                    local entity = Ext.Entity.Get(item)
+                    if entity and entity.Tag and entity.Tag.Tags then
+                        local rawTags = {}
+                        for _, tag in pairs(entity.Tag.Tags) do
+                            rawTags[#rawTags + 1] = tostring(tag)
+                        end
+                        table.sort(rawTags)
+                        log(string.format("  RawTags    | entity=%-60s | tpl=%s | %s",
+                            item, tpl, #rawTags > 0 and table.concat(rawTags, ", ") or "none"))
+                    end
+                    break
+                end
+            end
+        end
+        return
+    end
+
+    -- No known sort tag at all.
     local tpl = Osi.GetTemplate(item) or "?"
     log(string.format("Pickup_NoTag | entity=%-60s | tpl=%s | tags=none <<CATCH-ALL>> <<NEEDS PATCH?>>",
         item, tpl))
@@ -200,6 +235,7 @@ Ext.Osiris.RegisterListener("EntityEvent", 2, "after", function(entity, event)
         local s, a  = Osi.GetStackAmount(entity)
         local max   = Osi.GetMaxStackAmount(entity)
         local story = Osi.IsStoryItem(entity)
+        local tags  = sortTagsPresent(entity)
 
         -- Populate pre-pass snapshot.
         prePassSnapshot[entity] = { tpl = tpl, name = name, amount = a }
@@ -215,9 +251,21 @@ Ext.Osiris.RegisterListener("EntityEvent", 2, "after", function(entity, event)
         for _ in pairs(seenNames) do nameCount = nameCount + 1 end
         local nameDiffFlag = nameCount > 1 and " <<NAME_DIFF>>" or ""
 
-        log(string.format("  BoH_item | entity=%-60s | name=%-40s | tpl=%s | s=%-3s a=%-3s max=%-3s story=%s%s%s",
+        log(string.format("  BoH_item | entity=%-60s | name=%-40s | tpl=%s | s=%-3s a=%-3s max=%-3s story=%s | tags=%s%s%s",
             entity, name, tpl, tostring(s), tostring(a), tostring(max), tostring(story),
-            dupeFlag, nameDiffFlag))
+            tags, dupeFlag, nameDiffFlag))
+
+        -- Dump raw tag UUIDs so missing SORT_TAGS entries can be identified.
+        local ent = Ext.Entity.Get(entity)
+        if ent and ent.Tag and ent.Tag.Tags then
+            local rawTags = {}
+            for _, tag in pairs(ent.Tag.Tags) do
+                rawTags[#rawTags + 1] = tostring(tag)
+            end
+            table.sort(rawTags)
+            log(string.format("    RawTags  | entity=%-60s | %s",
+                entity, #rawTags > 0 and table.concat(rawTags, ", ") or "none"))
+        end
 
     elseif event == "CE_DbgDumpDone" then
         -- Print a summary of any template+name conflicts found in the dump.
